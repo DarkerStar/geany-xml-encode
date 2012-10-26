@@ -1,0 +1,46 @@
+# French translation for Geany XML encode plugin
+# Copyright (C) 2012 Mark A. Gibbs
+# This file is distributed under the same license as the
+# geany-xml-encode package.
+# Mark A. Gibbs <indi.in.the.wired@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: geany-xml-encode 0.1\n"
+"Report-Msgid-Bugs-To: Mark A. Gibbs <indi.in.the.wired@gmail.com>\n"
+"POT-Creation-Date: 2012-10-26 10:55-0400\n"
+"PO-Revision-Date: 2012-10-26 10:55-0500\n"
+"Last-Translator: Mark A. Gibbs <indi.in.the.wired@gmail.com>\n"
+"Language-Team: French translation team <indi.in.the.wired@gmail.com>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#. Plugin name
+#: ../src/xml-encode.c:17
+msgid "XML Encode"
+msgstr "Encodeur XML"
+
+#. Plugin description
+#: ../src/xml-encode.c:19
+msgid "Encode XML special characters as entities"
+msgstr "Encode les caractères spéciaux XML comme entités"
+
+#. Main menu item
+#: ../src/xml-encode.c:147
+msgid "Encode _XML special characters"
+msgstr "Encoder les caractères spéciaux _XML"
+
+#. "Encode document" submenu item
+#: ../src/xml-encode.c:156
+msgid "_Document"
+msgstr "_Document"
+
+#. "Encode selection" submenu item
+#: ../src/xml-encode.c:161
+msgid "_Selection"
+msgstr "_Sélection"

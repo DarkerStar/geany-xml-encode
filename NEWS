@@ -1,0 +1,10 @@
+Version 0.1-alpha ------------------------------------------------- [2012-10-26]
+
+*   New Geany plugin that adds a command to convert XML special characters
+    ("&", "<", ">", "'" and """) in a section, or the whole document, into
+    character entities. Requires [Geany](http://www.geany.org/).
+    
+*   When installed and activated (in the Geany plugins manager), adds a new menu
+    item - when there is a document open - with a submenu with two options. One
+    option converts XML special characters in the current selection. The other
+    converts XML special characters in the whole document.
