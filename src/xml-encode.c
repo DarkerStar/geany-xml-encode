@@ -1,13 +1,33 @@
+/*
+ * This file is part of the Geany XML encode plugin.
+ * 
+ * The Geany XML encode plugin is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * The Geany XML encode plugin is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with the Geany XML encode plugin.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
 
 #include "geanyplugin.h"
 
+/* External variables *********************************************************/
 GeanyPlugin*    geany_plugin;
 GeanyData*      geany_data;
 GeanyFunctions* geany_functions;
 
+/* Plugin information *********************************************************/
 PLUGIN_VERSION_CHECK(211)
 
 PLUGIN_SET_TRANSLATABLE_INFO(
@@ -21,6 +41,7 @@ PLUGIN_SET_TRANSLATABLE_INFO(
   "Mark A. Gibbs <indi.in.the.wired@gmail.com>"
 );
 
+/* Plugin private stuff *******************************************************/
 static GtkWidget* main_menu = NULL;
 
 typedef struct entity_data
@@ -30,6 +51,19 @@ typedef struct entity_data
 	unsigned int entity_length;
 } entity_data;
 
+/* do_encode
+ * 
+ * Performs the actual functions of scanning the text in the current document,
+ * or just the selected text, and replacing all the XML special characters with
+ * their entity references.
+ * 
+ * Parameters:
+ *   begin     unsigned long  The character position to start replacing at.
+ *   end       unsigned long  The character position to stop replacing at.
+ * 
+ * Returns:
+ *   none
+ */
 void do_encode(unsigned long begin, unsigned long end)
 {
 	static gchar const amp_entity[]  = "&amp;";
@@ -110,6 +144,11 @@ void do_encode(unsigned long begin, unsigned long end)
 	}
 }
 
+/* activate_encode_doc
+ * 
+ * Callback function for "activate" signal from menu item to encode XML chars
+ * in the entire document.
+ */
 void activate_encode_doc(GtkMenuItem* menu_item, gpointer gdata)
 {
 	GeanyDocument* document = document_get_current();
@@ -124,6 +163,11 @@ void activate_encode_doc(GtkMenuItem* menu_item, gpointer gdata)
 	}
 }
 
+/* activate_encode_sel
+ * 
+ * Callback function for "activate" signal from menu item to encode XML chars
+ * in the selection.
+ */
 void activate_encode_sel(GtkMenuItem* menu_item, gpointer gdata)
 {
 	GeanyDocument* document = document_get_current();
@@ -138,6 +182,12 @@ void activate_encode_sel(GtkMenuItem* menu_item, gpointer gdata)
 	}
 }
 
+/* Exported functions *********************************************************/
+
+/* plugin_init
+ * 
+ * Sets up translations, and the menu items.
+ */
 void plugin_init(GeanyData* data)
 {
   // Initialize translations
@@ -170,6 +220,10 @@ void plugin_init(GeanyData* data)
   ui_add_document_sensitive(main_menu);
 }
 
+/* plugin_cleanup
+ * 
+ * Destroys the menu items created by plugin_init().
+ */
 void plugin_cleanup(void)
 {
 	// Destroy the menu
