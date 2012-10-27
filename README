@@ -15,7 +15,8 @@ adds new menu commands to convert XML special characters (“&”, “<”, “>
 Latest version
 --------------
 
-TBD.
+The latest release can be downloaded from the
+[github project downloads page](https://github.com/DarkerStar/geany-xml-encode/downloads).
 
 
 
@@ -155,4 +156,5 @@ Please see the file called COPYING.
 Contacts
 --------
 
-TBD.
+For contact information, check out the
+[github project page](https://github.com/DarkerStar/geany-xml-encode).
