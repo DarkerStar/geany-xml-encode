@@ -1,3 +1,17 @@
+2012-10-31  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
+     
+     * po/eo.po: Translated replacement status message strings.
+     
+     * po/es.po: Translated replacement status message strings.
+     
+     * po/fr.po: Translated replacement status message strings.
+     
+     * po/ja.po: Translated replacement status message strings.
+     
+     * src/xml-encode.c (do_encode): Added counter "replaced" to count the
+     replacements done, and then a section at the end of the function to
+     display a status message giving the number of replacements.
+
 2012-10-26  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
      
      * COPYING: New project copyright documentaion.
