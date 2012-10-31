@@ -1,6 +1,7 @@
 2012-10-31  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
      
      * configure.ac: Change quotes around LOCALEDIR definition so it works now.
+     Updated version.
      
      * Makefile.am: Added uninstall-hook to delete shared object.
      
