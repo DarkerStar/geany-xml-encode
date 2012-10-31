@@ -46,9 +46,9 @@ static GtkWidget* main_menu = NULL;
 
 typedef struct entity_data
 {
-	gchar        character;
-	gchar const* entity;
-	unsigned int entity_length;
+  gchar        character;
+  gchar const* entity;
+  unsigned int entity_length;
 } entity_data;
 
 /* do_encode
@@ -66,82 +66,111 @@ typedef struct entity_data
  */
 void do_encode(unsigned long begin, unsigned long end)
 {
-	static gchar const amp_entity[]  = "&amp;";
-	static gchar const lt_entity[]   = "&lt;";
-	static gchar const gt_entity[]   = "&gt;";
-	static gchar const quot_entity[] = "&quot;";
-	static gchar const apos_entity[] = "&apos;";
-	
-	static entity_data const entities[] = {
-		{ '&',  amp_entity,  sizeof(amp_entity) - 1  },
-		{ '<',  lt_entity,   sizeof(lt_entity) - 1   },
-		{ '>',  gt_entity,   sizeof(gt_entity) - 1   },
-		{ '"',  quot_entity, sizeof(quot_entity) - 1 },
-		{ '\'', apos_entity, sizeof(apos_entity) - 1 },
-	};
-	unsigned int const num_entities = sizeof(entities) / sizeof(entities[0]);
-	
-	GeanyDocument* document = document_get_current();
-	if (document && begin != end)
-	{
-		ScintillaObject* sci = document->editor->sci;
-		
-		// Save original target info
-		unsigned long t_beg = scintilla_send_message(sci, SCI_GETTARGETSTART, 0, 0);
-		unsigned long t_end = scintilla_send_message(sci, SCI_GETTARGETEND, 0, 0);
-		
-		// Start undo action (so a single undo undoes all changes at once)
-		scintilla_send_message(sci, SCI_BEGINUNDOACTION, 0, 0);
-		
-		while (begin < end)
-		{
-			// Get next character
-			gchar c = (gchar)scintilla_send_message(sci, SCI_GETCHARAT, begin, 0);
-			
-			// See if it's a special character
-			entity_data const* entity = NULL;
-			for (unsigned int n = 0; n < num_entities; ++n)
-			{
-				if (entities[n].character == c)
-				{
-					entity = &entities[n];
-					break;
-				}
-			}
-			
-			// If it is, do the replace; otherwise, just move on
-			if (entity)
-			{
-				// Mark the character as the target
-				scintilla_send_message(sci, SCI_SETTARGETSTART, begin, 0);
-				scintilla_send_message(sci, SCI_SETTARGETEND, begin + 1, 0);
-				
-				// Replace
-				scintilla_send_message(sci, SCI_REPLACETARGET,
-					entity->entity_length,
-					(sptr_t)entity->entity
-				);
-				
-				// Advance past the inserted entity
-				begin += entity->entity_length;
-				
-				// The text size has grown by the additional entity characters
-				end += entity->entity_length - 1;
-			}
-			else
-			{
-				// Move on to the next char
-				++begin;
-			}
-		}
-		
-		// End undo action
-		scintilla_send_message(sci, SCI_ENDUNDOACTION, 0, 0);
-		
-		// Restore original target info
-		scintilla_send_message(sci, SCI_SETTARGETSTART, t_beg, 0);
-		scintilla_send_message(sci, SCI_SETTARGETEND, t_end, 0);
-	}
+  static gchar const amp_entity[]  = "&amp;";
+  static gchar const lt_entity[]   = "&lt;";
+  static gchar const gt_entity[]   = "&gt;";
+  static gchar const quot_entity[] = "&quot;";
+  static gchar const apos_entity[] = "&apos;";
+  
+  static entity_data const entities[] = {
+    { '&',  amp_entity,  sizeof(amp_entity) - 1  },
+    { '<',  lt_entity,   sizeof(lt_entity) - 1   },
+    { '>',  gt_entity,   sizeof(gt_entity) - 1   },
+    { '"',  quot_entity, sizeof(quot_entity) - 1 },
+    { '\'', apos_entity, sizeof(apos_entity) - 1 },
+  };
+  unsigned int const num_entities = sizeof(entities) / sizeof(entities[0]);
+  
+  GeanyDocument* document = document_get_current();
+  if (document && begin != end)
+  {
+    ScintillaObject* sci = document->editor->sci;
+    
+    // Save original target info
+    unsigned long t_beg = scintilla_send_message(sci, SCI_GETTARGETSTART, 0, 0);
+    unsigned long t_end = scintilla_send_message(sci, SCI_GETTARGETEND, 0, 0);
+    
+    // Start undo action (so a single undo undoes all changes at once)
+    scintilla_send_message(sci, SCI_BEGINUNDOACTION, 0, 0);
+    
+    // Counter to count replacements
+    unsigned int replaced = 0;
+    
+    while (begin < end)
+    {
+      // Get next character
+      gchar c = (gchar)scintilla_send_message(sci, SCI_GETCHARAT, begin, 0);
+      
+      // See if it's a special character
+      entity_data const* entity = NULL;
+      for (unsigned int n = 0; n < num_entities; ++n)
+      {
+        if (entities[n].character == c)
+        {
+          entity = &entities[n];
+          break;
+        }
+      }
+      
+      // If it is, do the replace; otherwise, just move on
+      if (entity)
+      {
+        // Mark the character as the target
+        scintilla_send_message(sci, SCI_SETTARGETSTART, begin, 0);
+        scintilla_send_message(sci, SCI_SETTARGETEND, begin + 1, 0);
+        
+        // Replace
+        scintilla_send_message(sci, SCI_REPLACETARGET,
+          entity->entity_length,
+          (sptr_t)entity->entity
+        );
+        
+        // Advance past the inserted entity
+        begin += entity->entity_length;
+        
+        // The text size has grown by the additional entity characters
+        end += entity->entity_length - 1;
+        
+        // Count replacement
+        ++replaced;
+      }
+      else
+      {
+        // Move on to the next char
+        ++begin;
+      }
+    }
+    
+    // End undo action
+    scintilla_send_message(sci, SCI_ENDUNDOACTION, 0, 0);
+    
+    // Restore original target info
+    scintilla_send_message(sci, SCI_SETTARGETSTART, t_beg, 0);
+    scintilla_send_message(sci, SCI_SETTARGETEND, t_end, 0);
+    
+    // Use statusbar to notify of replacements, if any
+    if (0 != replaced)
+    {
+      gchar const* file_name = g_path_get_basename(DOC_FILENAME(document));
+      
+      // Statusbar message for %n replacements in file %s
+      gchar const* msg = g_dngettext(
+        NULL,
+        "%s: replaced %d XML special character with an entity reference.",
+        "%s: replaced %d XML special characters with entity references.",
+        replaced
+      );
+      
+      ui_set_statusbar(TRUE, msg, file_name, replaced);
+      
+      g_free(file_name);
+    }
+    else
+    {
+      // Statusbar message when no replacements were done
+      ui_set_statusbar(FALSE, _("No XML special characters found."));
+    }
+  }
 }
 
 /* activate_encode_doc
@@ -151,16 +180,16 @@ void do_encode(unsigned long begin, unsigned long end)
  */
 void activate_encode_doc(GtkMenuItem* menu_item, gpointer gdata)
 {
-	GeanyDocument* document = document_get_current();
-	if (document)
-	{
-		ScintillaObject* sci = document->editor->sci;
-		
-		unsigned long sel_beg = 0;
-		unsigned long sel_end = scintilla_send_message(sci, SCI_GETLENGTH, 0, 0);
-		
-		do_encode(sel_beg, sel_end);
-	}
+  GeanyDocument* document = document_get_current();
+  if (document)
+  {
+    ScintillaObject* sci = document->editor->sci;
+    
+    unsigned long sel_beg = 0;
+    unsigned long sel_end = scintilla_send_message(sci, SCI_GETLENGTH, 0, 0);
+    
+    do_encode(sel_beg, sel_end);
+  }
 }
 
 /* activate_encode_sel
@@ -170,16 +199,16 @@ void activate_encode_doc(GtkMenuItem* menu_item, gpointer gdata)
  */
 void activate_encode_sel(GtkMenuItem* menu_item, gpointer gdata)
 {
-	GeanyDocument* document = document_get_current();
-	if (document)
-	{
-		ScintillaObject* sci = document->editor->sci;
-		
-		unsigned long sel_beg = scintilla_send_message(sci, SCI_GETSELECTIONSTART, 0, 0);
-		unsigned long sel_end = scintilla_send_message(sci, SCI_GETSELECTIONEND, 0, 0);
-		
-		do_encode(sel_beg, sel_end);
-	}
+  GeanyDocument* document = document_get_current();
+  if (document)
+  {
+    ScintillaObject* sci = document->editor->sci;
+    
+    unsigned long sel_beg = scintilla_send_message(sci, SCI_GETSELECTIONSTART, 0, 0);
+    unsigned long sel_end = scintilla_send_message(sci, SCI_GETSELECTIONEND, 0, 0);
+    
+    do_encode(sel_beg, sel_end);
+  }
 }
 
 /* Exported functions *********************************************************/
@@ -226,7 +255,7 @@ void plugin_init(GeanyData* data)
  */
 void plugin_cleanup(void)
 {
-	// Destroy the menu
+  // Destroy the menu
   gtk_widget_destroy(main_menu);
   main_menu = NULL;
 }

@@ -21,7 +21,7 @@
 # Initialize autoconf ##########################################################
 AC_PREREQ([2.69])
 
-AC_INIT([Geany XML encode plugin], [0.1], [indi.in.the.wired@gmail.com])
+AC_INIT([Geany XML encode plugin], [0.2], [indi.in.the.wired@gmail.com])
 
 AC_CONFIG_SRCDIR([src/xml-encode.c])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -41,7 +41,7 @@ IT_PROG_INTLTOOL([0.50.0])
 GETTEXT_PACKAGE=geany-xml-encode
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [The domain to use with gettext])
-LOCALEDIR=[${datadir}/locale]
+LOCALEDIR="${datadir}/locale"
 AC_SUBST(LOCALEDIR)
 AM_GLIB_GNU_GETTEXT
 

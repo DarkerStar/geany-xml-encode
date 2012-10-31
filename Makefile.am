@@ -40,3 +40,7 @@ DISTCLEANFILES = intltool-extract \
 install-exec-hook:
 	rm -f $(geanypluginsdir)/xmlencode.la
 
+# Remove the plugin
+uninstall-hook:
+	rm -f $(geanypluginsdir)/xmlencode.so
+
