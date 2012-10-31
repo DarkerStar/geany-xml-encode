@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: geany-xml-encode 0.1\n"
 "Report-Msgid-Bugs-To: Mark A. Gibbs <indi.in.the.wired@gmail.com>\n"
-"POT-Creation-Date: 2012-10-26 10:55-0400\n"
-"PO-Revision-Date: 2012-10-26 10:55-0500\n"
+"POT-Creation-Date: 2012-10-27 19:21-0400\n"
+"PO-Revision-Date: 2012-10-27 19:58-0500\n"
 "Last-Translator: Mark A. Gibbs <indi.in.the.wired@gmail.com>\n"
 "Language-Team: Spanish translation team <indi.in.the.wired@gmail.com>\n"
 "Language: es\n"
@@ -21,26 +21,39 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 
 #. Plugin name
-#: ../src/xml-encode.c:17
+#: ../src/xml-encode.c:37
 msgid "XML Encode"
 msgstr "Codificador XML"
 
 #. Plugin description
-#: ../src/xml-encode.c:19
+#: ../src/xml-encode.c:39
 msgid "Encode XML special characters as entities"
 msgstr "Codificar caracteres especiales de XML como entidades"
 
+#: ../src/xml-encode.c:159
+#, c-format
+msgid "%s: replaced %d XML special character with an entity reference."
+msgid_plural "%s: replaced %d XML special characters with entity references."
+msgstr[0] "%s: se reemplazaron %d carácter especial de XML con entidad."
+msgstr[1] "%s: se reemplazaron %d caracteres especiales de XML con entidades."
+
+#. Statusbar message when no replacements were done
+#: ../src/xml-encode.c:171
+msgid "No XML special characters found."
+msgstr "No se encontraron caracteres especiales de XML."
+
 #. Main menu item
-#: ../src/xml-encode.c:147
+#: ../src/xml-encode.c:226
 msgid "Encode _XML special characters"
 msgstr "Codificar caracteres especiales de _XML"
 
 #. "Encode document" submenu item
-#: ../src/xml-encode.c:156
+#: ../src/xml-encode.c:235
 msgid "_Document"
 msgstr "_Documento"
 
 #. "Encode selection" submenu item
-#: ../src/xml-encode.c:161
+#: ../src/xml-encode.c:240
 msgid "_Selection"
 msgstr "_Selección"
+
