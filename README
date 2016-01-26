@@ -77,7 +77,7 @@ script with the “--with-geany-libdir” option. For example:
 After that, the regular “make” and “make install” commands should build the
 plugin and install it in the desired location.
 
-In some cases, it may be required to run the “bootstrap” script first. This
+In some cases, it may be required to run the “autogen.sh” script first. This
 should normally only be run by developers to prepare the project for the end
 user.
 

@@ -1,5 +1,26 @@
 2016-01-26  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
      
+     * INSTALL: Updated to 2013 FSF revision.
+     
+     * AUTHORS: Changed "bootstrap" reference to "autogen.sh"
+     
+     * README: Changed "bootstrap" reference to "autogen.sh"
+     
+     * .gitignore: Added ignore rule for the "*~" backup file pattern.
+     Removed ignore rule for ".gitignore" in "build-aux" ("build-aux" is now
+     generated during bootstrap).
+     
+     * bootstrap: File removed.
+     Renamed "autogen.sh".
+     
+     * autogen.sh: New bootstrap script.
+     "build-aux" dir is now generated during bootstrap.
+     "intltoolize" is now called before "autoreconf", rather than after.
+     Verbose and force options added to both "intltoolize" and "autoreconf"
+     calls.
+
+2016-01-26  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
+     
      * configure.ac: Added AC_PROG_AR before LT_INIT (issue #1).
      Updated version.
      
