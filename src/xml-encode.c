@@ -163,7 +163,7 @@ void do_encode(unsigned long begin, unsigned long end)
       
       ui_set_statusbar(TRUE, msg, file_name, replaced);
       
-      g_free(file_name);
+      g_free((gchar*)file_name);
     }
     else
     {

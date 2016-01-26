@@ -1,3 +1,19 @@
+Version 0.2.1-alpha ----------------------------------------------- [2016-01-26]
+
+*   [BUGFIX]: Fixed terminal autoreconf warning message about missing
+    AM_PROG_AR (issue #1).
+    
+*   [BUGFIX]: Fixed compile warning message about calling g_free() with const
+    pointer (issue #2).
+
+Version 0.2-alpha ------------------------------------------------- [2012-10-31]
+
+*   [BUGFIX]: Fixed problem in locale directory string; translations now load
+    correctly.
+    
+*   When replacements are done, a message is now displayed in the status area
+    giving the number of replacements.
+
 Version 0.1-alpha ------------------------------------------------- [2012-10-26]
 
 *   New Geany plugin that adds a command to convert XML special characters
