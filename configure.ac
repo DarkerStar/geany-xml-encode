@@ -29,6 +29,7 @@ AC_CONFIG_MACRO_DIR([m4])
 
 # Initialize automake and libtool ##############################################
 AM_INIT_AUTOMAKE([-Wall -Werror])
+AM_PROG_AR
 LT_INIT([disable-static])
 
 # Set up program checks ########################################################
