@@ -21,7 +21,7 @@
 # Initialize autoconf ##########################################################
 AC_PREREQ([2.69])
 
-AC_INIT([Geany XML encode plugin], [0.2], [indi.in.the.wired@gmail.com])
+AC_INIT([Geany XML encode plugin], [0.2.1], [indi.in.the.wired@gmail.com])
 
 AC_CONFIG_SRCDIR([src/xml-encode.c])
 AC_CONFIG_AUX_DIR([build-aux])
