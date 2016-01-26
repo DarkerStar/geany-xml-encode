@@ -20,6 +20,14 @@
 #                                                                              #
 ################################################################################
 
+auxdir=build-aux
+
+# Create the auxiliary build directory, if necessary
+if [ ! -d "${auxdir}" ]
+then
+	mkdir -- "${auxdir}" || exit 1
+fi
+
 # Use autoreconf to prepare the project
 autoreconf --install
 
