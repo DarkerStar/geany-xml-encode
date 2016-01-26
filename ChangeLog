@@ -1,3 +1,11 @@
+2016-01-26  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
+     
+     * configure.ac: Added AC_PROG_AR before LT_INIT (issue #1).
+     Updated version.
+     
+     * src/xml-encode.c (do_encode): Added cast to non-const pointer in call
+     to g_free (issue #2).
+
 2012-10-31  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
      
      * configure.ac: Change quotes around LOCALEDIR definition so it works now.
@@ -71,6 +79,6 @@
      (plugin_cleanup): New exported function (used by Geany).
 
 
-# Copyright 2012 Mark A. Gibbs
+# Copyright 2012-2016 Mark A. Gibbs
 # Copying and distribution of this file, with or without modification, are
 # permitted provided the copyright notice and this notice are preserved.
