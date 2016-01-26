@@ -25,11 +25,8 @@ auxdir=build-aux
 # Create the auxiliary build directory, if necessary
 if [ ! -d "${auxdir}" ]
 then
-	mkdir -- "${auxdir}" || exit 1
+	mkdir -- "${auxdir}" || exit ${?}
 fi
 
-# Use autoreconf to prepare the project
-autoreconf --install
-
-# Set up intltool
-intltoolize --automake --copy
+intltoolize --automake --copy --force || exit ${?}
+autoreconf --verbose  --force --install || exit ${?}
