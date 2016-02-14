@@ -1,3 +1,4 @@
 # List of source files containing translatable strings #########################
 
 src/xml-encode.c
+src/encode.c

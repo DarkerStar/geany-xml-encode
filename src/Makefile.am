@@ -34,5 +34,8 @@ AM_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 ## Recipies to create libraries
 geanyplugins_LTLIBRARIES = xmlencode.la
 
-xmlencode_la_SOURCES = xml-encode.c
+xmlencode_la_SOURCES = xml-encode.c \
+                       encode.h \
+                       encode.c
+
 xmlencode_la_LIBADD  = $(GEANY_LIBS) $(INTLLIBS)
