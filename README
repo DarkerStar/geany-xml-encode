@@ -111,15 +111,6 @@ The plugin's functions are so simple, there was simply no need for the
 power of C++.
 
 ### __Known issues and potential improvements__
-
-*   When the last character of the selection is a special character, it
-    gets moved outside of the selection after converting. It should
-    remain within the selection. (This applies to both document and
-    selection conversions.)
-    
-*   A message could be displayed, possibly in the status bar at the
-    bottom or in the status window, giving the number of entities
-    converted, similar to how the normal Replace function works.
     
 *   XML _de_code?
     
