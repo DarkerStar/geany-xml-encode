@@ -1,3 +1,23 @@
+2016-02-15  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
+     
+     * AUTHORS: Added "src/encode.h" and "src/encode.c".
+     
+     * po/POTFILES.in: Added "src/encode.h" and "src/encode.c".
+     
+     * src/Makefile.am: (xmlencode_la_SOURCES) Added "src/encode.h" and
+     "src/encode.c".
+     
+     * src/xml-encode.c: (do_encode): Moved to "src/encode.c"
+     (activate_encode_doc): Refactored body out to "geany_xml_encode_document"
+     (activate_encode_sel): Refactored body out to "geany_xml_encode_selection"
+     
+     * src/encode.h: New source file
+     
+     * src/encode.c: New source file
+     (geany_xml_encode): SCI_SETSELECTIONSTART and SCI_SETSELECTIONEND used
+     to adjust selection boundaries if they coincide with a special character
+     (issue #4).
+
 2016-01-26  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
      
      * INSTALL: Updated to 2013 FSF revision.

@@ -132,6 +132,10 @@ static void geany_xml_encode(GeanyDocument* document, unsigned long begin, unsig
     entity_data const* entity = geany_xml_encode_entity(c);
     if (entity)
     {
+      // Get the selection info
+      unsigned long sel_beg = scintilla_send_message(sci, SCI_GETSELECTIONSTART, 0, 0);
+      unsigned long sel_end = scintilla_send_message(sci, SCI_GETSELECTIONEND, 0, 0);
+      
       // Mark the character as the target
       scintilla_send_message(sci, SCI_SETTARGETSTART, begin, 0);
       scintilla_send_message(sci, SCI_SETTARGETEND, begin + 1, 0);
@@ -142,20 +146,26 @@ static void geany_xml_encode(GeanyDocument* document, unsigned long begin, unsig
         (sptr_t)entity->entity
       );
       
-      // Advance past the inserted entity
-      begin += entity->entity_length;
+      // How far to advance (the difference in length between original text
+      // and replaced text)
+      int advance = entity->entity_length - 1;
       
-      // The text size has grown by the additional entity characters
-      end += entity->entity_length - 1;
+      // Update the selection, if necessary
+      if (sel_beg == begin)
+        scintilla_send_message(sci, SCI_SETSELECTIONSTART, sel_beg, 0);
+      if (sel_end == (begin + 1))
+        scintilla_send_message(sci, SCI_SETSELECTIONEND, sel_end + advance, 0);
+      
+      // Advance all the relevant values
+      begin += advance;
+      end += advance;
       
       // Count replacement
       ++replaced;
     }
-    else
-    {
-      // Move on to the next char
-      ++begin;
-    }
+    
+    // Move on to the next char
+    ++begin;
   }
   
   // Restore original target info

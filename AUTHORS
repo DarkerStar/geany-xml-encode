@@ -15,7 +15,8 @@ Mark A. Gibbs                                      <indi.in.the.wired@gmail.com>
 
   created      -> AUTHORS, ChangeLog, COPYING, INSTALL, NEWS, README, THANKS,
                   autogen.sh, configure.ac, Makefile.am, m4/geany.m4,
-                  po/LINGUAS, po/POTFILES.in, src/Makefile.am, src/xml-encode.c
+                  po/LINGUAS, po/POTFILES.in, src/Makefile.am,
+                  src/xml-encode.c, src/encode.h, src/encode.c
   
   translations -> Esperanto (eo), French (fr), Japanese (ja), Spanish (es),
                   default English
