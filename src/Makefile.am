@@ -35,6 +35,8 @@ AM_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 geanyplugins_LTLIBRARIES = xmlencode.la
 
 xmlencode_la_SOURCES = xml-encode.c \
+                       signals.h \
+                       signals.c \
                        encode.h \
                        encode.c
 
