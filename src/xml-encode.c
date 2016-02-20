@@ -24,6 +24,16 @@
 
 #include "encode.h"
 
+/* API transition defines *****************************************************/
+#define XML_ENCODE_OLD_API_VERSION 211
+#define XML_ENCODE_NEW_API_VERSION 225
+
+#if GEANY_API_VERSION >= XML_ENCODE_NEW_API_VERSION
+
+// Nothing needed.
+
+#else // GEANY_API_VERSION < XML_ENCODE_NEW_API_VERSION
+
 /* External variables *********************************************************/
 GeanyPlugin*    geany_plugin;
 GeanyData*      geany_data;
@@ -45,6 +55,8 @@ PLUGIN_SET_TRANSLATABLE_INFO(
 
 /* Plugin private stuff *******************************************************/
 static GtkWidget* main_menu = NULL;
+
+#endif // GEANY_API_VERSION >= XML_ENCODE_NEW_API_VERSION
 
 /* activate_encode_doc
  * 
@@ -72,19 +84,19 @@ void activate_encode_sel(GtkMenuItem* menu_item, gpointer gdata)
  * 
  * Sets up translations, and the menu items.
  */
-void plugin_init(GeanyData* data)
+void do_plugin_init(GeanyData* data, GtkWidget** main_menu)
 {
   // Initialize translations
   main_locale_init(LOCALEDIR, GETTEXT_PACKAGE);
   
   // Main menu item
-  main_menu = gtk_menu_item_new_with_mnemonic(_("Encode _XML special characters"));
-  gtk_widget_show_all(main_menu);
-  gtk_container_add(GTK_CONTAINER(geany->main_widgets->tools_menu), main_menu);
+  *main_menu = gtk_menu_item_new_with_mnemonic(_("Encode _XML special characters"));
+  gtk_widget_show_all(*main_menu);
+  gtk_container_add(GTK_CONTAINER(data->main_widgets->tools_menu), *main_menu);
   
   // Submenu
   GtkWidget* main_menu_submenu = gtk_menu_new();
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(main_menu), main_menu_submenu);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(*main_menu), main_menu_submenu);
   
   // "Encode document" submenu item
   GtkWidget* mi_encode_doc = gtk_menu_item_new_with_mnemonic(_("_Document"));
@@ -101,7 +113,80 @@ void plugin_init(GeanyData* data)
   gtk_widget_show(mi_encode_sel);
   
   // Set main menu item to be active only when there's a document
-  ui_add_document_sensitive(main_menu);
+  ui_add_document_sensitive(*main_menu);
+}
+
+/* plugin_cleanup
+ * 
+ * Destroys the menu items created by plugin_init().
+ */
+void do_plugin_cleanup(GtkWidget* main_menu)
+{
+  // Destroy the menu
+  gtk_widget_destroy(main_menu);
+}
+
+#if GEANY_API_VERSION >= XML_ENCODE_NEW_API_VERSION
+
+/* New 1.26 API ***************************************************************/
+
+/* plugin_init
+ * 
+ * Sets up the menu items.
+ */
+static gboolean plugin_init(GeanyPlugin* plugin, gpointer pdata)
+{
+  GtkWidget* main_menu = NULL;
+  
+  do_plugin_init(plugin->geany_data, &main_menu);
+  geany_plugin_set_data(plugin, main_menu, NULL);
+  
+  return TRUE;
+}
+
+/* plugin_cleanup
+ * 
+ * Destroys the menu items.
+ */
+static void plugin_cleanup(GeanyPlugin*, gpointer pdata)
+{
+  GtkWidget* main_menu = (GtkWidget*)pdata;
+  
+  do_plugin_cleanup(main_menu);
+}
+
+/* geany_load_module
+ * 
+ * Plugin entry point.
+ */
+G_MODULE_EXPORT
+void geany_load_module(GeanyPlugin* plugin)
+{
+  main_locale_init(LOCALEDIR, GETTEXT_PACKAGE);
+  
+  plugin->info->name        = _("XML Encode");
+  plugin->info->description = _("Encode XML special characters as entities");
+  plugin->info->version     = VERSION;
+  plugin->info->author      = "Mark A. Gibbs <indi.in.the.wired@gmail.com>";
+  
+  plugin->funcs->init    = plugin_init;
+  plugin->funcs->cleanup = plugin_cleanup;
+  
+  geany_plugin_register(plugin, GEANY_API_VERSION, XML_ENCODE_NEW_API_VERSION,
+    GEANY_ABI_VERSION);
+}
+
+#else // GEANY_API_VERSION < XML_ENCODE_NEW_API_VERSION
+
+/* Old (pre 1.26) API *********************************************************/
+
+/* plugin_init
+ * 
+ * Sets up translations, and the menu items.
+ */
+void plugin_init(GeanyData* data)
+{
+  do_plugin_init(geany, &main_menu);
 }
 
 /* plugin_cleanup
@@ -110,7 +195,8 @@ void plugin_init(GeanyData* data)
  */
 void plugin_cleanup(void)
 {
-  // Destroy the menu
-  gtk_widget_destroy(main_menu);
+  do_plugin_cleanup(main_menu);
   main_menu = NULL;
 }
+
+#endif //  GEANY_API_VERSION >= XML_ENCODE_NEW_API_VERSION
