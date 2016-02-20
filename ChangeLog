@@ -1,3 +1,9 @@
+2016-02-20  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
+     
+     * src/xml-encode.c: (plugin_init): Refactored body out to "do_plugin_init"
+     (plugin_cleanup): Refactored body out to "do_plugin_cleanup"
+     New functions added to support transition to 1.26 API (issue #3).
+
 2016-02-15  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
      
      * AUTHORS: Added "src/encode.h" and "src/encode.c".
