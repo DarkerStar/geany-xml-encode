@@ -15,3 +15,13 @@
  * along with the Geany XML encode plugin.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
+
+#ifndef GEANY_XML_signals_h_
+#define GEANY_XML_signals_h_
+
+#include "geanyplugin.h"
+
+void activate_encode_doc(GtkMenuItem*, gpointer);
+void activate_encode_sel(GtkMenuItem*, gpointer);
+
+#endif // include guard

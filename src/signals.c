@@ -15,3 +15,26 @@
  * along with the Geany XML encode plugin.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
+
+#include "encode.h"
+#include "signals.h"
+
+/* activate_encode_doc
+ * 
+ * Callback function for "activate" signal from menu item to encode XML chars
+ * in the entire document.
+ */
+void activate_encode_doc(GtkMenuItem* menu_item, gpointer gdata)
+{
+  geany_xml_encode_document();
+}
+
+/* activate_encode_sel
+ * 
+ * Callback function for "activate" signal from menu item to encode XML chars
+ * in the selection.
+ */
+void activate_encode_sel(GtkMenuItem* menu_item, gpointer gdata)
+{
+  geany_xml_encode_selection();
+}
