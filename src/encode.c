@@ -175,9 +175,6 @@ static int geany_xml_encode(GeanyDocument* document, unsigned long begin, unsign
   // End undo action
   scintilla_send_message(sci, SCI_ENDUNDOACTION, 0, 0);
   
-  // Display notification in status area.
-  geany_xml_encode_notify(document, replaced);
-  
   return replaced;
 }
 
@@ -195,7 +192,10 @@ void geany_xml_encode_document()
     unsigned long sel_beg = 0;
     unsigned long sel_end = scintilla_send_message(sci, SCI_GETLENGTH, 0, 0);
     
-    geany_xml_encode(document, sel_beg, sel_end);
+    int replaced = geany_xml_encode(document, sel_beg, sel_end);
+    
+    // Display notification in status area.
+    geany_xml_encode_notify(document, replaced);
   }
 }
 
@@ -213,6 +213,9 @@ void geany_xml_encode_selection()
     unsigned long sel_beg = scintilla_send_message(sci, SCI_GETSELECTIONSTART, 0, 0);
     unsigned long sel_end = scintilla_send_message(sci, SCI_GETSELECTIONEND, 0, 0);
     
-    geany_xml_encode(document, sel_beg, sel_end);
+    int replaced = geany_xml_encode(document, sel_beg, sel_end);
+    
+    // Display notification in status area.
+    geany_xml_encode_notify(document, replaced);
   }
 }
