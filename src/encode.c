@@ -101,7 +101,7 @@ static void geany_xml_encode_notify(GeanyDocument* document, int count)
  * Encode the XML entities in the document given, between the begin and
  * end markers.
  */
-static void geany_xml_encode(GeanyDocument* document, unsigned long begin, unsigned long end)
+static int geany_xml_encode(GeanyDocument* document, unsigned long begin, unsigned long end)
 {
   assert(document);
   
@@ -177,6 +177,8 @@ static void geany_xml_encode(GeanyDocument* document, unsigned long begin, unsig
   
   // Display notification in status area.
   geany_xml_encode_notify(document, replaced);
+  
+  return replaced;
 }
 
 /* geany_xml_encode_document
