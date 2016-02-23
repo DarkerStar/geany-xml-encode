@@ -1,3 +1,10 @@
+2016-02-23  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
+     
+     * src/encode.c: (geany_xml_encode): Changed to return int (which is
+     number of replacements made). Statusbar notification removed.
+     (geany_xml_encode_document): Added statusbar notification.
+     (geany_xml_encode_selection): Added statusbar notification.
+
 2016-02-20  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
      
      * src/xml-encode.c: (plugin_init): Refactored body out to "do_plugin_init"
