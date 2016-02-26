@@ -22,7 +22,7 @@
 
 #include "geanyplugin.h"
 
-#include "encode.h"
+#include "signals.h"
 
 /* API transition defines *****************************************************/
 #define XML_ENCODE_OLD_API_VERSION 211
@@ -57,26 +57,6 @@ PLUGIN_SET_TRANSLATABLE_INFO(
 static GtkWidget* main_menu = NULL;
 
 #endif // GEANY_API_VERSION >= XML_ENCODE_NEW_API_VERSION
-
-/* activate_encode_doc
- * 
- * Callback function for "activate" signal from menu item to encode XML chars
- * in the entire document.
- */
-void activate_encode_doc(GtkMenuItem* menu_item, gpointer gdata)
-{
-  geany_xml_encode_document();
-}
-
-/* activate_encode_sel
- * 
- * Callback function for "activate" signal from menu item to encode XML chars
- * in the selection.
- */
-void activate_encode_sel(GtkMenuItem* menu_item, gpointer gdata)
-{
-  geany_xml_encode_selection();
-}
 
 /* Exported functions *********************************************************/
 

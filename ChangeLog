@@ -1,3 +1,20 @@
+2016-02-26  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
+     
+     * AUTHORS: Added "src/signals.h" and "src/signals.c".
+     
+     * po/POTFILES.in: Added "src/signals.h" and "src/signals.c".
+     
+     * src/Makefile.am: (xmlencode_la_SOURCES) Added "src/signals.h" and
+     "src/signals.c".
+     
+     * src/xml-encode.c:
+     (activate_encode_doc): Refactored function to "signals.c"
+     (activate_encode_sel): Refactored function to "signals.c"
+     
+     * src/signals.h: New source file
+     
+     * src/signals.c: New source file
+
 2016-02-23  Mark A. Gibbs  <indi.in.the.wired@gmail.com>
      
      * src/encode.c: (geany_xml_encode): Changed to return int (which is
