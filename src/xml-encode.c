@@ -22,6 +22,18 @@
 
 #include "geanyplugin.h"
 
+#include "signals.h"
+
+/* API transition defines *****************************************************/
+#define XML_ENCODE_OLD_API_VERSION 211
+#define XML_ENCODE_NEW_API_VERSION 225
+
+#if GEANY_API_VERSION >= XML_ENCODE_NEW_API_VERSION
+
+// Nothing needed.
+
+#else // GEANY_API_VERSION < XML_ENCODE_NEW_API_VERSION
+
 /* External variables *********************************************************/
 GeanyPlugin*    geany_plugin;
 GeanyData*      geany_data;
@@ -44,172 +56,7 @@ PLUGIN_SET_TRANSLATABLE_INFO(
 /* Plugin private stuff *******************************************************/
 static GtkWidget* main_menu = NULL;
 
-typedef struct entity_data
-{
-  gchar        character;
-  gchar const* entity;
-  unsigned int entity_length;
-} entity_data;
-
-/* do_encode
- * 
- * Performs the actual functions of scanning the text in the current document,
- * or just the selected text, and replacing all the XML special characters with
- * their entity references.
- * 
- * Parameters:
- *   begin     unsigned long  The character position to start replacing at.
- *   end       unsigned long  The character position to stop replacing at.
- * 
- * Returns:
- *   none
- */
-void do_encode(unsigned long begin, unsigned long end)
-{
-  static gchar const amp_entity[]  = "&amp;";
-  static gchar const lt_entity[]   = "&lt;";
-  static gchar const gt_entity[]   = "&gt;";
-  static gchar const quot_entity[] = "&quot;";
-  static gchar const apos_entity[] = "&apos;";
-  
-  static entity_data const entities[] = {
-    { '&',  amp_entity,  sizeof(amp_entity) - 1  },
-    { '<',  lt_entity,   sizeof(lt_entity) - 1   },
-    { '>',  gt_entity,   sizeof(gt_entity) - 1   },
-    { '"',  quot_entity, sizeof(quot_entity) - 1 },
-    { '\'', apos_entity, sizeof(apos_entity) - 1 },
-  };
-  unsigned int const num_entities = sizeof(entities) / sizeof(entities[0]);
-  
-  GeanyDocument* document = document_get_current();
-  if (document && begin != end)
-  {
-    ScintillaObject* sci = document->editor->sci;
-    
-    // Save original target info
-    unsigned long t_beg = scintilla_send_message(sci, SCI_GETTARGETSTART, 0, 0);
-    unsigned long t_end = scintilla_send_message(sci, SCI_GETTARGETEND, 0, 0);
-    
-    // Start undo action (so a single undo undoes all changes at once)
-    scintilla_send_message(sci, SCI_BEGINUNDOACTION, 0, 0);
-    
-    // Counter to count replacements
-    unsigned int replaced = 0;
-    
-    while (begin < end)
-    {
-      // Get next character
-      gchar c = (gchar)scintilla_send_message(sci, SCI_GETCHARAT, begin, 0);
-      
-      // See if it's a special character
-      entity_data const* entity = NULL;
-      for (unsigned int n = 0; n < num_entities; ++n)
-      {
-        if (entities[n].character == c)
-        {
-          entity = &entities[n];
-          break;
-        }
-      }
-      
-      // If it is, do the replace; otherwise, just move on
-      if (entity)
-      {
-        // Mark the character as the target
-        scintilla_send_message(sci, SCI_SETTARGETSTART, begin, 0);
-        scintilla_send_message(sci, SCI_SETTARGETEND, begin + 1, 0);
-        
-        // Replace
-        scintilla_send_message(sci, SCI_REPLACETARGET,
-          entity->entity_length,
-          (sptr_t)entity->entity
-        );
-        
-        // Advance past the inserted entity
-        begin += entity->entity_length;
-        
-        // The text size has grown by the additional entity characters
-        end += entity->entity_length - 1;
-        
-        // Count replacement
-        ++replaced;
-      }
-      else
-      {
-        // Move on to the next char
-        ++begin;
-      }
-    }
-    
-    // End undo action
-    scintilla_send_message(sci, SCI_ENDUNDOACTION, 0, 0);
-    
-    // Restore original target info
-    scintilla_send_message(sci, SCI_SETTARGETSTART, t_beg, 0);
-    scintilla_send_message(sci, SCI_SETTARGETEND, t_end, 0);
-    
-    // Use statusbar to notify of replacements, if any
-    if (0 != replaced)
-    {
-      gchar const* file_name = g_path_get_basename(DOC_FILENAME(document));
-      
-      // Statusbar message for %n replacements in file %s
-      gchar const* msg = g_dngettext(
-        NULL,
-        "%s: replaced %d XML special character with an entity reference.",
-        "%s: replaced %d XML special characters with entity references.",
-        replaced
-      );
-      
-      ui_set_statusbar(TRUE, msg, file_name, replaced);
-      
-      g_free((gchar*)file_name);
-    }
-    else
-    {
-      // Statusbar message when no replacements were done
-      ui_set_statusbar(FALSE, _("No XML special characters found."));
-    }
-  }
-}
-
-/* activate_encode_doc
- * 
- * Callback function for "activate" signal from menu item to encode XML chars
- * in the entire document.
- */
-void activate_encode_doc(GtkMenuItem* menu_item, gpointer gdata)
-{
-  GeanyDocument* document = document_get_current();
-  if (document)
-  {
-    ScintillaObject* sci = document->editor->sci;
-    
-    unsigned long sel_beg = 0;
-    unsigned long sel_end = scintilla_send_message(sci, SCI_GETLENGTH, 0, 0);
-    
-    do_encode(sel_beg, sel_end);
-  }
-}
-
-/* activate_encode_sel
- * 
- * Callback function for "activate" signal from menu item to encode XML chars
- * in the selection.
- */
-void activate_encode_sel(GtkMenuItem* menu_item, gpointer gdata)
-{
-  GeanyDocument* document = document_get_current();
-  if (document)
-  {
-    ScintillaObject* sci = document->editor->sci;
-    
-    unsigned long sel_beg = scintilla_send_message(sci, SCI_GETSELECTIONSTART, 0, 0);
-    unsigned long sel_end = scintilla_send_message(sci, SCI_GETSELECTIONEND, 0, 0);
-    
-    do_encode(sel_beg, sel_end);
-  }
-}
+#endif // GEANY_API_VERSION >= XML_ENCODE_NEW_API_VERSION
 
 /* Exported functions *********************************************************/
 
@@ -217,19 +64,19 @@ void activate_encode_sel(GtkMenuItem* menu_item, gpointer gdata)
  * 
  * Sets up translations, and the menu items.
  */
-void plugin_init(GeanyData* data)
+void do_plugin_init(GeanyData* data, GtkWidget** main_menu)
 {
   // Initialize translations
   main_locale_init(LOCALEDIR, GETTEXT_PACKAGE);
   
   // Main menu item
-  main_menu = gtk_menu_item_new_with_mnemonic(_("Encode _XML special characters"));
-  gtk_widget_show_all(main_menu);
-  gtk_container_add(GTK_CONTAINER(geany->main_widgets->tools_menu), main_menu);
+  *main_menu = gtk_menu_item_new_with_mnemonic(_("Encode _XML special characters"));
+  gtk_widget_show_all(*main_menu);
+  gtk_container_add(GTK_CONTAINER(data->main_widgets->tools_menu), *main_menu);
   
   // Submenu
   GtkWidget* main_menu_submenu = gtk_menu_new();
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(main_menu), main_menu_submenu);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(*main_menu), main_menu_submenu);
   
   // "Encode document" submenu item
   GtkWidget* mi_encode_doc = gtk_menu_item_new_with_mnemonic(_("_Document"));
@@ -246,7 +93,80 @@ void plugin_init(GeanyData* data)
   gtk_widget_show(mi_encode_sel);
   
   // Set main menu item to be active only when there's a document
-  ui_add_document_sensitive(main_menu);
+  ui_add_document_sensitive(*main_menu);
+}
+
+/* plugin_cleanup
+ * 
+ * Destroys the menu items created by plugin_init().
+ */
+void do_plugin_cleanup(GtkWidget* main_menu)
+{
+  // Destroy the menu
+  gtk_widget_destroy(main_menu);
+}
+
+#if GEANY_API_VERSION >= XML_ENCODE_NEW_API_VERSION
+
+/* New 1.26 API ***************************************************************/
+
+/* plugin_init
+ * 
+ * Sets up the menu items.
+ */
+static gboolean plugin_init(GeanyPlugin* plugin, gpointer pdata)
+{
+  GtkWidget* main_menu = NULL;
+  
+  do_plugin_init(plugin->geany_data, &main_menu);
+  geany_plugin_set_data(plugin, main_menu, NULL);
+  
+  return TRUE;
+}
+
+/* plugin_cleanup
+ * 
+ * Destroys the menu items.
+ */
+static void plugin_cleanup(GeanyPlugin*, gpointer pdata)
+{
+  GtkWidget* main_menu = (GtkWidget*)pdata;
+  
+  do_plugin_cleanup(main_menu);
+}
+
+/* geany_load_module
+ * 
+ * Plugin entry point.
+ */
+G_MODULE_EXPORT
+void geany_load_module(GeanyPlugin* plugin)
+{
+  main_locale_init(LOCALEDIR, GETTEXT_PACKAGE);
+  
+  plugin->info->name        = _("XML Encode");
+  plugin->info->description = _("Encode XML special characters as entities");
+  plugin->info->version     = VERSION;
+  plugin->info->author      = "Mark A. Gibbs <indi.in.the.wired@gmail.com>";
+  
+  plugin->funcs->init    = plugin_init;
+  plugin->funcs->cleanup = plugin_cleanup;
+  
+  geany_plugin_register(plugin, GEANY_API_VERSION, XML_ENCODE_NEW_API_VERSION,
+    GEANY_ABI_VERSION);
+}
+
+#else // GEANY_API_VERSION < XML_ENCODE_NEW_API_VERSION
+
+/* Old (pre 1.26) API *********************************************************/
+
+/* plugin_init
+ * 
+ * Sets up translations, and the menu items.
+ */
+void plugin_init(GeanyData* data)
+{
+  do_plugin_init(geany, &main_menu);
 }
 
 /* plugin_cleanup
@@ -255,7 +175,8 @@ void plugin_init(GeanyData* data)
  */
 void plugin_cleanup(void)
 {
-  // Destroy the menu
-  gtk_widget_destroy(main_menu);
+  do_plugin_cleanup(main_menu);
   main_menu = NULL;
 }
+
+#endif //  GEANY_API_VERSION >= XML_ENCODE_NEW_API_VERSION

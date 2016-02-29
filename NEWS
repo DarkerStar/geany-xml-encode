@@ -1,3 +1,10 @@
+Version 0.3-alpha ------------------------------------------------- [2016-02-29]
+
+*   Added support for new Geany plugin API (1.26) (issue #3).
+    
+*   [BUGFIX]: Added code to adjust selection boundary if there is a special
+    character on the boundary (issue #4).
+
 Version 0.2.1-alpha ----------------------------------------------- [2016-01-26]
 
 *   [BUGFIX]: Fixed terminal autoreconf warning message about missing

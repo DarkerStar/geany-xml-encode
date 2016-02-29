@@ -20,8 +20,13 @@
 #                                                                              #
 ################################################################################
 
-# Use autoreconf to prepare the project
-autoreconf --install
+auxdir=build-aux
 
-# Set up intltool
-intltoolize --automake --copy
+# Create the auxiliary build directory, if necessary
+if [ ! -d "${auxdir}" ]
+then
+	mkdir -- "${auxdir}" || exit ${?}
+fi
+
+intltoolize --automake --copy --force || exit ${?}
+autoreconf --verbose  --force --install || exit ${?}
